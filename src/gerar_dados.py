@@ -58,12 +58,6 @@ vendedores = [
 data_inicio = date(2024, 1, 1)
 data_fim = date(2025, 12, 31)
 
-def gerar_data():
-    dias = (data_fim - data_inicio).days
-    dias_aleatorios = random.randint(0, dias)
-
-    return data_inicio + pd.Timedelta(days=dias_aleatorios)
-
 def obter_fator_sazonalidade(data):
     #Black Friday
     if data.month == 11 and data.weekday() == 4 and data.day >= 23:
