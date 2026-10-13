@@ -98,7 +98,7 @@ def criar_grafico_linha(aba, df):
     grafico.add_data(valores, titles_from_data=True)
     grafico.set_categories(meses)
 
-    COR = "1F4E78" #azul escuro
+    COR = "1F4E78" #Azul escuro
 
     #Títulos fora da área do gráfico
     grafico.title.overlay = False

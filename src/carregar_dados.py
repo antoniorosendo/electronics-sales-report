@@ -16,6 +16,7 @@ def salvar_no_banco(df, conexao):
     #Grava o data frame no banco de dados
     df.to_sql("vendas", conexao, if_exists="replace", index=False)
 
+#Função de teste, para saber se o programa está lendo corretamente o banco de dados
 def verificar_banco(conexao):
     print(pd.read_sql("SELECT COUNT(*) AS total FROM vendas", conexao))
     print(pd.read_sql("SELECT * FROM vendas LIMIT 5", conexao))
@@ -26,7 +27,6 @@ def main():
 
     with closing(sqlite3.connect(CAMINHO_DB)) as conexao:
         salvar_no_banco(df, conexao)
-        verificar_banco(conexao)
 
 if __name__ == "__main__": 
     main()

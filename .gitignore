@@ -1,6 +1,5 @@
 #Não subir
 .env
-*.db
 
 #Python
 __pycache__/

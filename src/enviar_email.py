@@ -74,11 +74,11 @@ def main():
         print("Erro: Credenciais de e-mail não encontradas no arquivo .env.")
         return
 
-    print("Calculando indicadores...")
+    print("Calculando indicadores")
     with closing(sqlite3.connect(CAMINHO_DB)) as conexao:
         indicadores = calcular_indicadores(conexao)
 
-    print("Lendo destinatários...")
+    print("Lendo destinatários")
     try:
         destinatarios = ler_destinatarios(CAMINHO_DESTINATARIOS)
     except FileNotFoundError:
@@ -90,7 +90,7 @@ def main():
         email = dest["Email"]
         setor = dest["Setor"]
 
-        print(f"Preparando e-mail para {nome} ({setor})...")
+        print(f"Preparando e-mail para {nome} ({setor})")
         
         corpo = montar_corpo(indicadores, nome, setor)
         
@@ -101,9 +101,9 @@ def main():
         
         try:
             disparar_email(remetente, senha, email, assunto, corpo, CAMINHO_RELATORIO)
-            print(f"E-mail enviado com sucesso para {email}!")
+            print(f"E-mail enviado com sucesso para {email}!\n")
         except Exception as erro:
-            print(f"Falha ao enviar e-mail para {email}. Erro: {erro}")
+            print(f"Falha ao enviar e-mail para {email}. Erro: {erro}\n")
 
 if __name__ == "__main__":
     main()
