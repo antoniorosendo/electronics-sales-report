@@ -1,6 +1,5 @@
 #Não subir
 .env
-data/saida/
 *.db
 
 #Python
