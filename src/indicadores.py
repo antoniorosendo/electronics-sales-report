@@ -50,6 +50,14 @@ def faturamento_por_vendedor(conexao):
     """
     return pd.read_sql(consulta, conexao)
 
+def produto_mais_vendido(conexao):
+    consulta = """SELECT produto, SUM(quantidade) AS unidades
+    FROM vendas
+    GROUP BY produto
+    ORDER BY unidades DESC
+    """
+    return pd.read_sql(consulta, conexao)
+
 def melhor_mes(df):
     return df.sort_values("faturamento", ascending=False).iloc[0]
 
@@ -67,10 +75,12 @@ def calcular_indicadores(conexao):
     por_categoria = faturamento_por_categoria(conexao)
     por_produto = faturamento_por_produto(conexao)
     por_vendedor = faturamento_por_vendedor(conexao)
+    por_quantidade = produto_mais_vendido(conexao)
 
     mes_top = melhor_mes(por_mes)
     produto_top = melhor_produto(por_produto)
     vendedor_top = melhor_vendedor(por_vendedor)
+    quantidade_top = por_quantidade.iloc[0]
 
     return {
         "faturamento_total": float(total),
@@ -79,6 +89,8 @@ def calcular_indicadores(conexao):
         "por_categoria": por_categoria,
         "por_produto": por_produto,
         "por_vendedor": por_vendedor,
+        "por_quantidade": por_quantidade,
+        "produto_mais_vendido": {"nome": str(quantidade_top["produto"]), "unidades": int(quantidade_top["unidades"])},
         "melhor_mes": {"nome": str(mes_top["mes"]), "faturamento": float(mes_top["faturamento"])},
         "melhor_produto": {"nome": str(produto_top["produto"]), "faturamento": float(produto_top["faturamento"])},
         "melhor_vendedor": {"nome": str(vendedor_top["vendedor"]), "faturamento": float(vendedor_top["faturamento"])}

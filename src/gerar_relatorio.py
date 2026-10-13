@@ -23,6 +23,8 @@ def preencher_resumo(aba, indicadores):
         ("Faturamento do melhor mês", indicadores["melhor_mes"]["faturamento"], True),
         ("Melhor produto", indicadores["melhor_produto"]["nome"], False),
         ("Faturamento do melhor produto", indicadores["melhor_produto"]["faturamento"], True),
+        ("Produto mais vendido", indicadores["produto_mais_vendido"]["nome"], False),
+        ("Quantidade do produto mais vendido", indicadores["produto_mais_vendido"]["unidades"], False),
         ("Melhor vendedor", indicadores["melhor_vendedor"]["nome"], False),
         ("Faturamento do melhor vendedor", indicadores["melhor_vendedor"]["faturamento"], True),
     ]
@@ -39,15 +41,14 @@ def preencher_resumo(aba, indicadores):
     aba.column_dimensions["A"].width = 28
     aba.column_dimensions["B"].width = 18
 
-
-
 def gerar_relatorio(indicadores, caminho_saida):
     wb = Workbook()
     resumo = wb.active
     resumo.title = "Resumo"
     mensal = wb.create_sheet("Mensal")
     categorias = wb.create_sheet("Categorias")
-    produtos = wb.create_sheet("Produtos")
+    produtos = wb.create_sheet("Produtos (Faturamento)")
+    quantidade = wb.create_sheet("Produtos (Quantidade)")
     vendedores = wb.create_sheet("Vendedores")
 
     #Tabelas
@@ -55,12 +56,14 @@ def gerar_relatorio(indicadores, caminho_saida):
     escrever_tabela(mensal, indicadores["por_mes"])
     escrever_tabela(categorias, indicadores["por_categoria"])
     escrever_tabela(produtos, indicadores["por_produto"])
+    escrever_tabela(quantidade, indicadores["por_quantidade"], colunas_dinheiro=())
     escrever_tabela(vendedores, indicadores["por_vendedor"])
 
     #Gráficos
     criar_grafico_linha(mensal, indicadores["por_mes"])
     criar_grafico_barras(categorias, indicadores["por_categoria"], "Faturamento por Categoria", "Categoria")
     criar_grafico_barras(produtos, indicadores["por_produto"], "Faturamento por Produto", "Produto")
+    criar_grafico_barras(quantidade, indicadores["por_quantidade"], "Quantidade por Produto", "Produto", titulo_valor="Unidades vendidas", formato_valor="0")
     criar_grafico_barras(vendedores, indicadores["por_vendedor"], "Faturamento por Vendedor", "Vendedor")
 
     wb.save(caminho_saida)
@@ -126,13 +129,13 @@ def criar_grafico_linha(aba, df):
 
     aba.add_chart(grafico, "F2")
 
-def criar_grafico_barras(aba, df, titulo, titulo_categoria):
+def criar_grafico_barras(aba, df, titulo, titulo_categoria, titulo_valor="Faturamento (R$)", formato_valor='"R$" #,##0'):
     ultima_linha = len(df) + 1
 
     grafico = BarChart()
     grafico.title = titulo
     grafico.x_axis.title = titulo_categoria
-    grafico.y_axis.title = "Faturamento (R$)"
+    grafico.y_axis.title = titulo_valor
 
     valores = Reference(aba, min_col=2, min_row=1, max_row=ultima_linha)
     categorias = Reference(aba, min_col=1, min_row=2, max_row=ultima_linha)
@@ -163,10 +166,10 @@ def criar_grafico_barras(aba, df, titulo, titulo_categoria):
     grafico.x_axis.delete = False
     grafico.y_axis.delete = False
 
-    grafico.y_axis.number_format = '"R$" #,##0'
+    grafico.y_axis.number_format = formato_valor
 
     grafico.width = 24
-    grafico.height = max(11, len(df) * 0.6)   # cresce com o número de itens: 28 produtos → ~16,8 cm
+    grafico.height = max(11, len(df) * 0.6) #Cresce com o número de itens
     grafico.x_axis.tickLblSkip = 1
 
     aba.add_chart(grafico, "D2")
