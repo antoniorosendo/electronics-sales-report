@@ -92,12 +92,12 @@ O pipeline executa as etapas de forma sequencial, garantindo a integridade dos d
 
 ![Execução no Terminal](images/terminal.png)
 
-### 📈 Relatório Excel Automático
+### Relatório Excel Automático
 O script SQL calcula métricas como Faturamento Total, Ticket Médio e Melhores Produtos. O OpenPyXL pega esses dados e monta uma planilha com abas separadas e gráficos formatados.
 
 ![Relatório Excel](images/relatorio.png)
 
-### ✉️ E-mails Segmentados
+### E-mails Personalizados
 O sistema lê a base de destinatários e formata o corpo do e-mail de acordo com a área da pessoa (Diretoria recebe um resumo executivo, Marketing foca em produtos e Financeiro em faturamento por categoria).
 
 ![E-mail Recebido](images/email.png)
