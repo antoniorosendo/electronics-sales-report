@@ -2,6 +2,15 @@
 
 Este projeto é um pipeline completo de dados desenvolvido em Python. Ele automatiza o fluxo de ponta a ponta: desde a geração de dados fictícios de vendas de eletrônicos, passando pelo armazenamento em banco de dados, cálculo de indicadores de negócios, até a criação de um relatório formatado em Excel e o envio segmentado por e-mail para diferentes setores da empresa (Diretoria, Marketing e Financeiro).
 
+## Metodologia (O conceito de Pipeline)
+
+Uma Pipeline de Dados, como a do projeto, é uma sequência automatizada onde os dados fluem em etapas. A saída de um processo é a entrada do próximo. Neste projeto, a arquitetura funciona assim:
+
+1. **Geração e Carga (ETL):** Criação de uma base CSV (12 mil+ linhas) e armazenamento em um banco relacional SQLite.
+2. **Transformação e Análise:** Uso da biblioteca Pandas e consultas SQL para gerar indicadores de performance (KPIs) como Ticket Médio e Top Produtos.
+3. **Visualização:** A biblioteca OpenPyXL converte os dados estruturados em uma planilha interativa do Excel com abas e gráficos.
+4. **Distribuição via SMTP:** O script usa o protocolo SMTP (Simple Mail Transfer Protocol), o padrão global para envio de mensagens na internet. Ele permite que o Python se comunique diretamente com os servidores do Google para despachar os relatórios como anexos de forma automatizada e autêntica.
+
 ## Tecnologias Utilizadas
 
 *   **Python 3**
@@ -11,7 +20,7 @@ Este projeto é um pipeline completo de dados desenvolvido em Python. Ele automa
 *   **smtplib / email.message:** Envio automatizado de e-mails via protocolo SMTP.
 *   **python-dotenv:** Gerenciamento de variáveis de ambiente de forma segura.
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```text
 electronics-sales-report/
@@ -37,7 +46,7 @@ electronics-sales-report/
 └── requirements.txt             #Dependências do projeto
 ```
 
-## ⚙️ Como Configurar e Executar
+## Como Configurar e Executar
 
 1. **Clone o repositório:**
    ```bash
@@ -60,7 +69,12 @@ electronics-sales-report/
    ```
 
 4. **Configure as Variáveis de Ambiente:**
-   Renomeie o arquivo `.env.example` para `.env` e preencha com suas credenciais do Gmail (lembre-se de usar uma "Senha de Aplicativo" se tiver verificação em duas etapas):
+   Renomeie o arquivo `.env.example` para `.env` e preencha com suas credenciais do Gmail. 
+   
+   > **Aviso Importante sobre o E-mail:** Você **não** deve usar a sua senha normal de login do Gmail. Para que o Python tenha autorização para enviar e-mails em seu nome, você precisa criar uma "Senha de Aplicativo" de 16 dígitos. 
+   > 
+   > [Clique aqui para ler o Tutorial Oficial do Google de como gerar sua Senha de Aplicativo](https://support.google.com/accounts/answer/185833?hl=pt-br)
+   
    ```env
    GMAIL_USER=seu.email@gmail.com
    GMAIL_APP_PASSWORD=sua_senha_de_app
@@ -72,7 +86,7 @@ electronics-sales-report/
    python src/main.py
    ```
 
-## 📊 Resultados e Funcionalidades
+## Resultados e Funcionalidades
 
 O pipeline executa as etapas de forma sequencial, garantindo a integridade dos dados. Veja abaixo o terminal durante a execução:
 
@@ -86,5 +100,4 @@ O script SQL calcula métricas como Faturamento Total, Ticket Médio e Melhores 
 ### ✉️ E-mails Segmentados
 O sistema lê a base de destinatários e formata o corpo do e-mail de acordo com a área da pessoa (Diretoria recebe um resumo executivo, Marketing foca em produtos e Financeiro em faturamento por categoria).
 
-*(Adicione aqui um print da sua caixa de entrada mostrando o e-mail recebido com o anexo)*
 ![E-mail Recebido](images/email.png)
